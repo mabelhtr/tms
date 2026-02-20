@@ -38,65 +38,18 @@ export function ProspectForm({ onAdd, onToast }) {
   }
 
   const submit = async (e) => {
-    e.preventDefault()
-    
-    // Validate first
-    const errs = validateForm(values)
-    if (Object.keys(errs).length) { 
-      setErrors(errs)
-      return 
-    }
-    
-    // ✅ NEW: Start submission
-    setIsSubmitting(true)
-    setSubmitStatus(null)
-    
-    // 🔗 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
-    const GOOGLE_SCRIPT_URL = https://script.google.com/macros/s/AKfycbyZn9EsO1itKcn8DPdjeyIgnSHCaxxw1e7KwgodBG6hVjrBVcwDgc1OpEV5ZVr2OpN5kQ/exec
-    
-    // Prepare data for Google Sheets (match your sheet columns)
-    const sheetData = {
-      salesId: values.salesId,
-      customerName: values.customerName,
-      phoneNumber: values.phone, // Map 'phone' to 'phoneNumber' for sheet
-      source: values.source,
-      marketingProgram: values.marketingProgram,
-      ktpNumber: values.ktpNumber,
-      birthdate: values.birthdate,
-      address: values.address
-    }
-    
-    try {
-      // Send to Google Apps Script
-      await fetch(GOOGLE_SCRIPT_URL, {
-        method: 'POST',
-        mode: 'no-cors', // Required for Google Apps Script
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(sheetData)
-      })
-      
-      // ✅ Success: Show message, clear form, notify parent
-      setSubmitStatus('success')
-      setValues(EMPTY)
-      setErrors({})
-      
-      // Keep parent component notified (if it uses onAdd)
-      if (onAdd) onAdd(values)
-      if (onToast) onToast('✅ Data berhasil dikirim ke Google Sheets!', 'success')
-      
-    } catch (error) {
-      // ❌ Error handling
-      console.error('Submission error:', error)
-      setSubmitStatus('error')
-      if (onToast) onToast('❌ Gagal mengirim data. Silakan coba lagi.', 'error')
-    } finally {
-      setIsSubmitting(false)
-      // Auto-hide status after 3 seconds
-      setTimeout(() => setSubmitStatus(null), 3000)
-    }
+  e.preventDefault()
+  
+  // Validate first
+  const errs = validateForm(values)
+  if (Object.keys(errs).length) { 
+    setErrors(errs)
+    return 
   }
+  
+…    setTimeout(() => setSubmitStatus(null), 3000)
+  }
+}
 
   const reset = () => { 
     if (window.confirm('Clear the form?')) { 
