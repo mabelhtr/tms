@@ -52,7 +52,7 @@ export function ProspectForm({ onAdd, onToast }) {
     setSubmitStatus(null)
     
     // 🔗 PASTE YOUR GOOGLE APPS SCRIPT WEB APP URL HERE
-    const GOOGLE_SCRIPT_URL = 'PASTE_YOUR_WEB_APP_URL_HERE'
+    const GOOGLE_SCRIPT_URL = https://script.google.com/macros/s/AKfycbyZn9EsO1itKcn8DPdjeyIgnSHCaxxw1e7KwgodBG6hVjrBVcwDgc1OpEV5ZVr2OpN5kQ/exec
     
     // Prepare data for Google Sheets (match your sheet columns)
     const sheetData = {
