@@ -1,12 +1,8 @@
 import { SOURCE_COLORS } from '../constants'
-import { exportToExcel } from '../utils/exportExcel'
+// ❌ REMOVED: import { exportToExcel } from '../utils/exportExcel'
 
 export function ProspectTable({ prospects, onClearAll, onToast }) {
-  const handleExport = () => {
-    if (!prospects.length) { onToast('No data to export!', 'error'); return }
-    exportToExcel(prospects)
-    onToast('Exported successfully!', 'success')
-  }
+  // ❌ REMOVED: handleExport function
 
   const handleClear = () => {
     if (window.confirm('Clear all entries? This cannot be undone.')) {
@@ -22,10 +18,9 @@ export function ProspectTable({ prospects, onClearAll, onToast }) {
           <h2 className="text-lg font-bold text-gray-800">📋 Prospect Records</h2>
           <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full">{prospects.length} entry</span>
         </div>
+        
+        {/* ✅ UPDATED: Only Clear All button remains */}
         <div className="flex gap-2">
-          <button onClick={handleExport} className={`text-sm font-semibold px-4 py-2 rounded-lg transition ${prospects.length ? 'bg-green-600 hover:bg-green-700 text-white' : 'bg-gray-100 text-gray-400 cursor-not-allowed'}`}>
-            📥 Export Excel
-          </button>
           {prospects.length > 0 && (
             <button onClick={handleClear} className="text-sm font-semibold px-4 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition">
               🗑 Clear All
