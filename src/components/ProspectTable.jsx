@@ -1,9 +1,6 @@
 import { SOURCE_COLORS } from '../constants'
-// ❌ REMOVED: import { exportToExcel } from '../utils/exportExcel'
 
 export function ProspectTable({ prospects, onClearAll, onToast }) {
-  // ❌ REMOVED: handleExport function
-
   const handleClear = () => {
     if (window.confirm('Clear all entries? This cannot be undone.')) {
       onClearAll()
@@ -18,8 +15,6 @@ export function ProspectTable({ prospects, onClearAll, onToast }) {
           <h2 className="text-lg font-bold text-gray-800">📋 Prospect Records</h2>
           <span className="bg-blue-100 text-blue-700 text-xs font-semibold px-2 py-1 rounded-full">{prospects.length} entry</span>
         </div>
-        
-        {/* ✅ UPDATED: Only Clear All button remains */}
         <div className="flex gap-2">
           {prospects.length > 0 && (
             <button onClick={handleClear} className="text-sm font-semibold px-4 py-2 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 transition">

@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { SOURCES } from '../constants'
 import { validateForm } from '../utils/validate'
+import { postToGoogleSheets } from '../utils/googleSheets'
 
 const EMPTY = { salesId: '', customerName: '', phone: '', source: '', marketingProgram: '', ktpNumber: '', address: '', birthdate: '' }
 
@@ -22,8 +23,6 @@ const inputClass = (err) =>
 export function ProspectForm({ onAdd, onToast }) {
   const [values, setValues] = useState(EMPTY)
   const [errors, setErrors] = useState({})
-  
-  // ✅ NEW: Submission state
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitStatus, setSubmitStatus] = useState(null) // 'success' | 'error' | null
 
@@ -38,33 +37,53 @@ export function ProspectForm({ onAdd, onToast }) {
   }
 
   const submit = async (e) => {
-  e.preventDefault()
-  
-  // Validate first
-  const errs = validateForm(values)
-  if (Object.keys(errs).length) { 
-    setErrors(errs)
-    return 
-  }
-  
-…    setTimeout(() => setSubmitStatus(null), 3000)
-  }
-}
+    e.preventDefault()
 
-  const reset = () => { 
-    if (window.confirm('Clear the form?')) { 
+    const errs = validateForm(values)
+    if (Object.keys(errs).length) {
+      setErrors(errs)
+      return
+    }
+
+    setIsSubmitting(true)
+    setSubmitStatus(null)
+
+    try {
+      const payload = {
+        ...values,
+        submittedAt: new Date().toLocaleString('id-ID'),
+      }
+
+      await postToGoogleSheets(payload)
+
+      onAdd(values)
+      onToast('Data berhasil dikirim ke Google Sheets!', 'success')
+      setSubmitStatus('success')
       setValues(EMPTY)
-      setErrors({}) 
-    } 
+      setErrors({})
+    } catch (err) {
+      console.error('Google Sheets POST failed:', err)
+      onToast('Gagal mengirim data. Silakan coba lagi.', 'error')
+      setSubmitStatus('error')
+    } finally {
+      setIsSubmitting(false)
+      setTimeout(() => setSubmitStatus(null), 3000)
+    }
+  }
+
+  const reset = () => {
+    if (window.confirm('Clear the form?')) {
+      setValues(EMPTY)
+      setErrors({})
+    }
   }
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-6">
       <h2 className="text-lg font-bold text-gray-800 mb-5">➕ Add New Prospect</h2>
-      
+
       <form onSubmit={submit} className="space-y-4">
-        
-        {/* ✅ NEW: Submission Status Messages */}
+
         {submitStatus === 'success' && (
           <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm">
             ✅ Data berhasil dikirim ke Google Sheets!
@@ -75,7 +94,7 @@ export function ProspectForm({ onAdd, onToast }) {
             ❌ Gagal mengirim data. Silakan coba lagi.
           </div>
         )}
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Field label="Sales ID" required error={errors.salesId}>
             <input name="salesId" value={values.salesId} onChange={handle} placeholder="e.g. SLS-001" className={inputClass(errors.salesId)} />
@@ -111,13 +130,12 @@ export function ProspectForm({ onAdd, onToast }) {
         </Field>
 
         <div className="flex gap-3 pt-2">
-          {/* ✅ UPDATED: Submit button with loading state */}
-          <button 
-            type="submit" 
+          <button
+            type="submit"
             disabled={isSubmitting}
             className={`flex-1 font-semibold py-2 px-4 rounded-lg transition text-white
-              ${isSubmitting 
-                ? 'bg-blue-400 cursor-not-allowed' 
+              ${isSubmitting
+                ? 'bg-blue-400 cursor-not-allowed'
                 : 'bg-blue-600 hover:bg-blue-700'
               }`}
           >
@@ -133,7 +151,7 @@ export function ProspectForm({ onAdd, onToast }) {
               '✓ Submit'
             )}
           </button>
-          
+
           <button type="button" onClick={reset} className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition">
             ✕ Clear
           </button>

@@ -17,15 +17,3 @@ export const SOURCE_COLORS = {
 }
 
 export const STORAGE_KEY = 'prospect_entries'
-
-export const EXCEL_HEADERS = {
-  salesId: 'Sales ID',
-  customerName: 'Customer Name',
-  phone: 'Phone Number',
-  source: 'Source',
-  marketingProgram: 'Marketing Activity Program',
-  ktpNumber: 'KTP Number',
-  address: 'Address',
-  birthdate: 'Birthdate',
-  submittedAt: 'Submitted At',
-}
